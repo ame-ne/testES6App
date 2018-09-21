@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "name": "asp.net",
+  "private": true,
+  "devDependencies": {
+    "webpack": "4.19.1",
+    "clean-webpack-plugin": "0.1.19"
+  },
+  "scripts": {
+    "webpack-script": "webpack"
+  },
+  "-vs-binding": {
+    "BeforeBuild": [
+      "webpack-script"
+    ]
+  }
+}
