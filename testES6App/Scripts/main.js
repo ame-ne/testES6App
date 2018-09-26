@@ -1,6 +1,9 @@
 ﻿'use strict';
 
-import 'babel-polyfill';
+import '@babel/polyfill';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+//import 'bootstrap/dist/css/bootstrap.css';
 import TestController from './Controllers/TestController';
 
 let a = () => document.getElementById("helloworld").innerText = "Hello world from script aaa";

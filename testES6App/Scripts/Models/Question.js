@@ -1,39 +1,45 @@
 ﻿'use strict';
 
+const privateVariables = new WeakMap();
+import Base64Util from '../Utils/Utils';
+
 export default class Question {
-    static _score = 0;
 
-    constructor(text, options, answers) {
-        let _answers = Base64Util.DecodeData(answers);
-        let oneAnswerCount = 10 / (Array.isArray(_answers) ? _answers.length : 1);
+    constructor(_text, _options, _answers) {
+        privateVariables.set(this, {
+            answers: Base64Util.DecodeData(_answers),
+            score: 0,
+            oneAnswerCount: (10 / (Array.isArray(_answers) ? _answers.length : 1))
+        })
 
-        this.options = Base64Util.DecodeData(options);
-        this.text = Base64Util.DecodeData(text);
-    } 
+        this.options = Base64Util.DecodeData(_options);
+        this.text = Base64Util.DecodeData(_text);
+    }
 
-        maxScore = (function () {
-            return Array.isArray(_answers) ? _answers.length * oneAnswerCount : oneAnswerCount;
-        })();
+    maxScore = (() => Array.isArray(_answers) ? _answers.length * oneAnswerCount : oneAnswerCount)();
 
-        getScore() {
-            return _score;
-        };
+    getScore() {
+        return privateVariables.get(this).score;
+    };
 
-        handleNext(selectedAnswers, callback) {
-            if (selectedAnswers && selectedAnswers.length > 0) {
-                if (Array.isArray(_answers)) {
-                    for (var i = 0, N = selectedAnswers.length; i < N; i++) {
-                        if (_answers.indexOf(selectedAnswers[i]) > -1) {
-                            _score += oneAnswerCount;
-                        }
-                    }
-                }
-                else {
-                    if (selectedAnswers.length == 1 && _answers.indexOf(selectedAnswers[0]) > -1) {
-                        _score += oneAnswerCount;
+    handleNext(selectedAnswers, callback) {
+        let answers = privateVariables.get(this).answers;
+        let score = 0;
+        if (selectedAnswers && selectedAnswers.length > 0) {
+            if (Array.isArray(answers)) {
+                for (var i = 0, N = selectedAnswers.length; i < N; i++) {
+                    if (answers.indexOf(selectedAnswers[i]) > -1) {
+                        score += oneAnswerCount;
                     }
                 }
             }
-            callback(self);
-        };
+            else {
+                if (selectedAnswers.length == 1 && answers.indexOf(selectedAnswers[0]) > -1) {
+                    score += oneAnswerCount;
+                }
+            }
+        }
+        privateVariables.get(this).score = score;
+        callback(this);
+    };
 }

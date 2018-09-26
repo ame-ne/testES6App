@@ -1,13 +1,13 @@
 ﻿'use strict';
 
-const webpack = require('webpack');
 const path = require('path');
 
 const bundleFolder = "./wwwroot/scripts/";
-const srcFolder = "./Scripts/"
+const srcFolder = "./Scripts/";
 
 module.exports = {
     entry: [
+        "@babel/polyfill",
         srcFolder + "main.js"
     ],
     devtool: "source-map",
@@ -19,14 +19,24 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.jsx$/,
+                test: /\.js$/,
                 exclude: /(node_modules)/,
-                loader: "babel-loader",
-                query: {
-                    presets: ["stage-3"]
-                }
+                use: [{
+                    loader: 'babel-loader',
+                    options: {
+                        babelrc: false,
+                        presets: ['@babel/preset-env']
+                    }
+                }],
+            }, 
+            {
+                test: /\.css$/,
+                loader: "style-loader!css-loader" 
             }
         ]
+    },
+    resolve: {
+        extensions: ['*', '.js', '.jsx']
     },
     plugins: [
     ]

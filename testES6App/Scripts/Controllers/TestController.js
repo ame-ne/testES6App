@@ -1,6 +1,7 @@
 ﻿'use strict';
+import '@babel/polyfill';
 let instance = null;
-export default class TestController {
+class TestController {
     constructor() {
         if (instance) {
             return instance;
@@ -12,3 +13,5 @@ export default class TestController {
         return 'from controller';
     }
 }
+
+export default TestController;
